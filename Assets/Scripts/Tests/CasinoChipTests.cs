@@ -10,7 +10,7 @@ namespace CasinoGames.Core.Tests
     public class CasinoChipTests
     {
         [Test]
-        public void GetValueReturnsCorrectQuantity()
+        public void GetValue_Returns_Correct_CasinoChipType_Constant()
         {
             #region Assemble
 
@@ -30,7 +30,7 @@ namespace CasinoGames.Core.Tests
             {
                 CasinoChip chip = chips[i];
                 int chipTypeValue = chip.GetValue();
-                Assert.IsTrue(Enum.IsDefined(typeof(CasinoChipType), chipTypeValue), $"chip[{i}] returned {chipTypeValue}, expected valid {nameof(CasinoChipType)} constant.");
+                Assert.AreEqual(chipTypeValue, chipTypes[i], $"chip[{i}] returned {chipTypeValue}, expected {chipTypes[i]}");
             }
 
             #endregion

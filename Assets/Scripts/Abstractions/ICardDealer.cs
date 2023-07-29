@@ -6,7 +6,7 @@ namespace CasinoGames.Core
 {
     public interface ICardDealer
     {
-        IEnumerable<ICard> Deck { get; }
+        IList<ICard> Deck { get; }
         void ShuffleDeck();
         void DealCards();
         void DealCard(ICardHolder cardHolder);

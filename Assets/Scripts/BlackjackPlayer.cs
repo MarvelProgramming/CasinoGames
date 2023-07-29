@@ -8,13 +8,16 @@ namespace CasinoGames.Core
 {
     public class BlackjackPlayer : IBlackjackPlayer
     {
-        public IEnumerable<IGameChip> Chips => throw new NotImplementedException();
+        public IList<IGameChip> Chips => throw new NotImplementedException();
 
         public int CurrentBet => throw new NotImplementedException();
 
-        public IEnumerable<ICard> Cards => throw new NotImplementedException();
+        public IList<ICard> Cards => throw new NotImplementedException();
 
-        public int TotalCardValue => throw new NotImplementedException();
+        public int GetHandValue()
+        {
+            throw new NotImplementedException();
+        }
 
         public void AddCard(ICard card)
         {

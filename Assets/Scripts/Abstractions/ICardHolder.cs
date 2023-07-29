@@ -8,8 +8,8 @@ namespace CasinoGames.Core
 {
     public interface ICardHolder
     {
-        IEnumerable<ICard> Cards { get; }
-        int TotalCardValue { get; }
+        IList<ICard> Cards { get; }
+        int GetHandValue();
         void AddCard(ICard card);
         void RemoveAllCards();
     }
