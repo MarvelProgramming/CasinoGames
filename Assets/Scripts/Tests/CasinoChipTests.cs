@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using NUnit.Framework;
 using UnityEngine;
@@ -6,23 +7,33 @@ using UnityEngine.TestTools;
 
 namespace CasinoGames.Core.Tests
 {
-    public class CasinoChipPlayerTests
+    public class CasinoChipTests
     {
-        // A Test behaves as an ordinary method
         [Test]
-        public void CasinoChipTestsSimplePasses()
+        public void GetValueReturnsCorrectQuantity()
         {
-            // Use the Assert class to test conditions
-        }
+            #region Assemble
 
-        // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-        // `yield return null;` to skip a frame.
-        [UnityTest]
-        public IEnumerator CasinoChipTestsWithEnumeratorPasses()
-        {
-            // Use the Assert class to test conditions.
-            // Use yield to skip a frame.
-            yield return null;
+            List<CasinoChip> chips = new List<CasinoChip>();
+            int[] chipTypes = (int[])Enum.GetValues(typeof(CasinoChipType));
+
+            foreach (int chipType in chipTypes)
+            {
+                chips.Add(new CasinoChip((CasinoChipType)chipType));
+            }
+
+            #endregion
+
+            #region Assert
+
+            for (int i = 0; i < chips.Count; i++)
+            {
+                CasinoChip chip = chips[i];
+                int chipTypeValue = chip.GetValue();
+                Assert.IsTrue(Enum.IsDefined(typeof(CasinoChipType), chipTypeValue), $"chip[{i}] returned {chipTypeValue}, expected valid {nameof(CasinoChipType)} constant.");
+            }
+
+            #endregion
         }
     }
 }

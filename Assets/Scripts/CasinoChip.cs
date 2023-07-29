@@ -8,6 +8,11 @@ namespace CasinoGames.Core
     {
         public CasinoChipType type;
 
+        public CasinoChip(CasinoChipType type)
+        {
+            this.type = type;
+        }
+
         public int GetValue()
         {
             return (int)type;
