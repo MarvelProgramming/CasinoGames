@@ -8,7 +8,7 @@ namespace CasinoGames.Core
 {
     public interface IBlackjackPlayer : ICardHolder
     {
-        IEnumerable<CasinoChip> Chips { get; }
+        IEnumerable<IGameChip> Chips { get; }
         int CurrentBet { get; }
         void IncreaseBet(int amount);
         void DecreaseBet(int amount);

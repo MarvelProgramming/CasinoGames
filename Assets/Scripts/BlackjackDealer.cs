@@ -10,7 +10,7 @@ namespace CasinoGames.Core
     {
         public IEnumerable<ICard> Deck => throw new NotImplementedException();
 
-        public IEnumerable<CasinoChip> Chips => throw new NotImplementedException();
+        public IEnumerable<IGameChip> Chips => throw new NotImplementedException();
 
         public int CurrentBet => throw new NotImplementedException();
 
