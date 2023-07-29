@@ -6,11 +6,11 @@ using UnityEngine.TestTools;
 
 namespace CasinoGames.Core.Tests
 {
-    public class CardstackTests
+    public class ChipstackAreaTests
     {
         // A Test behaves as an ordinary method
         [Test]
-        public void CardstackTestsSimplePasses()
+        public void ChipstackTestsSimplePasses()
         {
             // Use the Assert class to test conditions
         }
@@ -18,7 +18,7 @@ namespace CasinoGames.Core.Tests
         // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
         // `yield return null;` to skip a frame.
         [UnityTest]
-        public IEnumerator CardstackTestsWithEnumeratorPasses()
+        public IEnumerator ChipstackTestsWithEnumeratorPasses()
         {
             // Use the Assert class to test conditions.
             // Use yield to skip a frame.

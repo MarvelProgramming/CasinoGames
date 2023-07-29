@@ -7,7 +7,7 @@ using UnityEngine;
 
 namespace CasinoGames.Core
 {
-    public class Cardstack : MonoBehaviour
+    public class CardstackArea : MonoBehaviour
     {
         [SerializeField]
         private IEnumerable<GameObject> placementLocations;

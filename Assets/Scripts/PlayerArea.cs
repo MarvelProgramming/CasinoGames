@@ -10,8 +10,8 @@ namespace CasinoGames.Core
     public class PlayerArea : MonoBehaviour
     {
         [SerializeField]
-        private IEnumerable<Chipstack> chipStacks;
-        private Cardstack cardstack;
+        private IEnumerable<ChipstackArea> chipStacks;
+        private CardstackArea cardstack;
 
         public void AddCard(ICard card)
         {
@@ -33,7 +33,7 @@ namespace CasinoGames.Core
             throw new NotImplementedException();
         }
 
-        private Chipstack GetEmptyChipStack()
+        private ChipstackArea GetEmptyChipStack()
         {
             throw new NotImplementedException();
         }

@@ -1,28 +1,72 @@
-﻿using System.Collections;
+﻿using NUnit.Framework;
+using System;
 using System.Collections.Generic;
-using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace CasinoGames.Core.Tests
 {
     public class ChipstackTests
     {
-        // A Test behaves as an ordinary method
         [Test]
-        public void ChipstackTestsSimplePasses()
+        public void DecreaseSize_Decreases_Size_By_Correct_Amount()
         {
-            // Use the Assert class to test conditions
+            #region Arrange
+
+            var chipstack = new Chipstack(new CasinoChip(CasinoChipType.One), 10);
+
+            #endregion
+
+            #region Act
+
+            chipstack.DecreaseSize(1);
+
+            #endregion
+
+            #region Assert
+
+            Assert.AreEqual(chipstack.Size, 9, $"chipstack size is {chipstack.Size}, expected 9");
+
+            #endregion
         }
 
-        // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-        // `yield return null;` to skip a frame.
-        [UnityTest]
-        public IEnumerator ChipstackTestsWithEnumeratorPasses()
+        [Test]
+        public void DecreaseSize_Throws_With_Negative_Input()
         {
-            // Use the Assert class to test conditions.
-            // Use yield to skip a frame.
-            yield return null;
+            #region Arrange
+
+            var chipstack = new Chipstack(new CasinoChip(CasinoChipType.One), 0);
+
+            #endregion
+
+            #region Assert
+
+            Assert.Throws(typeof(ArgumentException), () => chipstack.DecreaseSize(-1), $"Expected {nameof(Chipstack.DecreaseSize)} to throw with negative input");
+
+            #endregion
+        }
+
+        [Test]
+        public void DecreaseSize_Does_Not_Result_In_Negative_Size()
+        {
+            #region Arrange
+
+            var chipstack = new Chipstack(new CasinoChip(CasinoChipType.One), 0);
+
+            #endregion
+
+            #region Act
+
+            chipstack.DecreaseSize(1);
+
+            #endregion
+
+            #region Assert
+
+            Assert.AreEqual(chipstack.Size, 0, $"chipstack size is {chipstack.Size}, expected 0");
+
+            #endregion
         }
     }
 }

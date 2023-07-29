@@ -7,51 +7,16 @@ using UnityEngine;
 
 namespace CasinoGames.Core
 {
-    public class BlackjackDealer : IBlackjackDealer
+    public class BlackjackDealer : BlackjackPlayer, IBlackjackDealer
     {
         public IList<ICard> Deck { get; }
 
-        public IList<IGameChip> Chips { get; }
-
-        public int CurrentBet { get; private set; }
-
-        public IList<ICard> Cards { get; }
-
-        public BlackjackDealer(IList<ICard> deck, IList<IGameChip> chips)
+        public BlackjackDealer(IList<ICard> deck)
         {
             Deck = new List<ICard>(deck);
-            Chips = chips;
-            Cards = new List<ICard>();
         }
 
-        public int GetHandValue()
-        {
-            int handValue = 0;
-            List<ICard> cards = new List<ICard>(Cards);
-            cards.Sort((firstCard, secondCard) => firstCard.Value - secondCard.Value);
-
-            foreach (ICard card in cards)
-            {
-                handValue += card.Value;
-            }
-
-            foreach (ICard card in cards)
-            {
-                if (handValue > 21 && card.Value == 11)
-                {
-                    handValue -= 10;
-                }
-            }
-
-            return handValue;
-        }
-
-        public void AddCard(ICard card)
-        {
-            Cards.Add(card);
-        }
-
-        public void Bust()
+        public override void Bust()
         {
             throw new NotImplementedException();
         }
@@ -69,31 +34,6 @@ namespace CasinoGames.Core
         public void DealCards()
         {
             throw new NotImplementedException();
-        }
-
-        public void IncreaseBet(int amount)
-        {
-            if (amount < 0)
-            {
-                throw new ArgumentException($"{nameof(IncreaseBet)} expects a positive input, received {amount}!");
-            }
-
-            CurrentBet += amount;
-        }
-
-        public void DecreaseBet(int amount)
-        {
-            if (amount < 0)
-            {
-                throw new ArgumentException($"{nameof(DecreaseBet)} expects a positive input, received {amount}!");
-            }
-
-            CurrentBet = Mathf.Max(CurrentBet - amount, 0);
-        }
-
-        public void RemoveAllCards()
-        {
-            Cards.Clear();
         }
 
         public void ShuffleDeck()
@@ -117,17 +57,12 @@ namespace CasinoGames.Core
             }
         }
 
-        public void Hit()
+        public override void Hit()
         {
             throw new NotImplementedException();
         }
 
-        public void Double()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Stay()
+        public IChipstack GetChipOfType(CasinoChipType type)
         {
             throw new NotImplementedException();
         }

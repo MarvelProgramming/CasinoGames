@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 
 namespace CasinoGames.Core
 {
-    public interface IBlackjackPlayer : ICardHolder
+    public interface IBlackjackPlayer : ICardHolder, IChipHolder
     {
-        IList<IGameChip> Chips { get; }
         int CurrentBet { get; }
         void IncreaseBet(int amount);
         void DecreaseBet(int amount);
