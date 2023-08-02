@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using CasinoGames.Utils;
 using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.TestTools;
@@ -8,21 +9,30 @@ namespace CasinoGames.Core.Tests
 {
     public class GameBoardTests
     {
-        // A Test behaves as an ordinary method
-        [Test]
-        public void GameBoardTestsSimplePasses()
+        private GameBoard gameBoard;
+
+        [SetUp]
+        public void Setup()
         {
-            // Use the Assert class to test conditions
+            gameBoard = GameObject.Instantiate(Resources.Load<GameBoard>("GameBoard"));
         }
 
-        // A UnityTest behaves like a coroutine in Play Mode. In Edit Mode you can use
-        // `yield return null;` to skip a frame.
-        [UnityTest]
-        public IEnumerator GameBoardWithEnumeratorPasses()
+        [TearDown]
+        public void TearDown()
         {
-            // Use the Assert class to test conditions.
-            // Use yield to skip a frame.
-            yield return null;
+            GameObject.Destroy(gameBoard.gameObject);
+        }
+
+        [Test]
+        public void GameBoard_Adds_Card_To_Correct_Player_Area_When_OnCardDealt_Event_Is_Invoked()
+        {
+            // Act
+            ICardDealer.OnDealtCard(0, new CasinoCard(0, FacingDirection.Front, null, null));
+
+            // Assert
+            PlayerArea[] playerAreas = gameBoard.GetComponentsInChildren<PlayerArea>();
+            int cardStackAreaSize = playerAreas[0].GetComponentInChildren<CardstackArea>().Size;
+            Assert.AreEqual(cardStackAreaSize, 1, $"cardstackarea size is {cardStackAreaSize}, expected 1");
         }
     }
 }

@@ -5,23 +5,27 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace CasinoGames.Core
 {
     public class PhysicalCard : MonoBehaviour
     {
-        private Sprite frontImage;
-        private Sprite backImage;
+        [SerializeField]
+        private SpriteRenderer frontImage;
+        [SerializeField]
+        private SpriteRenderer backImage;
 
-        public void Setup(Sprite frontImage, Sprite backImage)
+        public void Setup(Sprite frontSprite, Sprite backSprite, FacingDirection facingDirection)
         {
-            this.frontImage = frontImage;
-            this.backImage = backImage;
+            frontImage.sprite = frontSprite;
+            backImage.sprite = backSprite;
+            SetFacingDirection(facingDirection);
         }
 
         public void SetFacingDirection(FacingDirection facingDirection)
         {
-            throw new NotImplementedException();
+            transform.forward = facingDirection == FacingDirection.Front ? Vector3.up : Vector3.down;
         }
     }
 }

@@ -9,7 +9,7 @@ namespace CasinoGames.Core
 {
     public interface ICard
     {
-        string Name { get; }
+        public static Action<int, int, ICard> OnCardChanged;
         int Value { get; }
         FacingDirection Facing { get; set; }
         Sprite FrontImage { get; }

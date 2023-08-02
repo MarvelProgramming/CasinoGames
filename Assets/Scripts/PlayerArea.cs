@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CasinoGames.Utils;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,32 +11,26 @@ namespace CasinoGames.Core
     public class PlayerArea : MonoBehaviour
     {
         [SerializeField]
-        private IEnumerable<ChipstackArea> chipStacks;
+        private GameObject physicalCardPrefab;
+        [SerializeField]
         private CardstackArea cardstack;
 
         public void AddCard(ICard card)
         {
-            throw new NotImplementedException();
+            GameObject physicalCardObject = Instantiate(physicalCardPrefab);
+            PhysicalCard physicalCard = physicalCardObject.GetComponent<PhysicalCard>();
+            cardstack.AddCard(physicalCard);
+            physicalCard.Setup(card.FrontImage, card.BackImage, card.Facing);
         }
 
         public void UpdateCard(int cardIndex, ICard cardDetails)
         {
-            throw new NotImplementedException();
+            cardstack.UpdateCard(cardIndex, cardDetails.Facing);
         }
 
-        public void RemoveCards()
+        public void RemoveAllCards()
         {
-            throw new NotImplementedException();
-        }
-
-        public void SetChips(IEnumerable<CasinoChip> chips)
-        {
-            throw new NotImplementedException();
-        }
-
-        private ChipstackArea GetEmptyChipStack()
-        {
-            throw new NotImplementedException();
+            cardstack.RemoveAllCards();
         }
     }
 }

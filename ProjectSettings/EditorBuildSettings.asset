@@ -4,5 +4,15 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/MainMenu.unity
+    guid: 9fc0d4010bbf28b4594072e72b8655ab
+  - enabled: 1
+    path: Assets/Scenes/Blackjack.unity
+    guid: b5b1f8ad0997aac439596e9d959a936d
+  - enabled: 1
+    path: Assets/Scenes/Poker.unity
+    guid: b513bc5434db07042a06f00164839df1
   m_configObjects: {}
+  m_UseUCBPForAssetBundles: 0

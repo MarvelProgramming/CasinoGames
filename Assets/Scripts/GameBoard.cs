@@ -10,11 +10,39 @@ namespace CasinoGames.Core
     public class GameBoard : MonoBehaviour
     {
         [SerializeField]
-        private IEnumerable<PlayerArea> playerAreas;
+        private List<PlayerArea> playerAreas;
 
-        public void UpdatePlayerCards(IEnumerable<ICard> cards)
+        #region Unity
+
+        private void Awake()
         {
-            throw new NotImplementedException();
+            ICardDealer.OnDealtCard += HandlePlayerDealtCard;
+            ICard.OnCardChanged += HandlePlayerCardChanged;
+        }
+
+        private void OnDestroy()
+        {
+            ICardDealer.OnDealtCard -= HandlePlayerDealtCard;
+            ICard.OnCardChanged -= HandlePlayerCardChanged;
+        }
+
+        #endregion
+
+        public void HandlePlayerDealtCard(int playerIndex, ICard dealtCard)
+        {
+            /*PlayerArea playerArea = GetPlayerArea(playerIndex);
+            playerArea.AddCard(dealtCard);*/
+        }
+
+        public void HandlePlayerCardChanged(int playerIndex, int cardIndex, ICard changedCard)
+        {
+            /*PlayerArea playerArea = GetPlayerArea(playerIndex);
+            playerArea.UpdateCard(cardIndex, changedCard);*/
+        }
+
+        private PlayerArea GetPlayerArea(int playerIndex)
+        {
+            return playerAreas.Count == 0 ? null : playerAreas[playerIndex];
         }
     }
 }

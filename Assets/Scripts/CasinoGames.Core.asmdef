@@ -2,7 +2,10 @@
     "name": "CasinoGames.Core",
     "rootNamespace": "CasinoGames",
     "references": [
-        "GUID:5c011ef456a6015488c186376a4bc0ca"
+        "GUID:5c011ef456a6015488c186376a4bc0ca",
+        "GUID:6456aa883e4dc5b4d958e38d2a32956d",
+        "GUID:6055be8ebefd69e48b49212b09b47b2f",
+        "GUID:1853d8710ff862e408e90106cd8caa33"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
