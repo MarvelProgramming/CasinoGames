@@ -1,11 +1,10 @@
+using CasinoGames.Abstractions;
 using CasinoGames.Abstractions.Poker;
-using CasinoGames.Core;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-namespace CasinoGames
+namespace CasinoGames.Core.Poker
 {
     public class PokerPlayer : Player, IPokerPlayer
     {
@@ -55,7 +54,7 @@ namespace CasinoGames
 
         public override int GetHandValue()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         private void HandleActivePlayerChanged(IPlayer newActivePlayer)
@@ -115,7 +114,7 @@ namespace CasinoGames
 
         private void HandleGameBegin()
         {
-            
+
         }
 
         private void HandleGameRestart()
@@ -192,8 +191,6 @@ namespace CasinoGames
             }
 
             yield return new WaitUntil(() => CurrentState != PlayerState.TakingAction);
-
-            IPokerPlayer.OnPlayerFinishTurn?.Invoke(this);
         }
 
         private bool IsBlindBetter()

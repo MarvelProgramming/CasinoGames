@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace CasinoGames.Core
+namespace CasinoGames.Abstractions
 {
     public interface IGameManager
     {
@@ -14,6 +10,5 @@ namespace CasinoGames.Core
         void Begin();
         void Restart();
         void End();
-        void Initialize();
     }
 }

@@ -1,15 +1,13 @@
+using CasinoGames.Abstractions;
 using CasinoGames.Abstractions.Poker;
 using CasinoGames.Utils;
-using Codice.CM.Client.Differences;
-using Codice.CM.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
-namespace CasinoGames.Core
+namespace CasinoGames.Core.Poker
 {
     [RequireComponent(typeof(AudioSource))]
     public class PokerGameManager : MonoBehaviour, ICardDealer, IGameManager
@@ -54,34 +52,29 @@ namespace CasinoGames.Core
 
         private void Awake()
         {
-            IPlayer.OnStateChanged += HandlePlayerStateChanged;
             IPokerPlayer.OnPlayerRaiseBet += HandlePlayerRaisedBet;
             IPokerPlayer.OnPlayerCall += HandlePlayerCalledBet;
             IPokerPlayer.OnPlayerFold += HandlePlayerFolded;
-            IPokerPlayer.OnPlayerFinishTurn += HandlePlayerFinishTurn;
-            SceneManager.sceneUnloaded += HandleSceneChanged;
             Initialize();
         }
 
         private void Start()
         {
-            IPlayer.players.Sort((firstPlayer, secondPlayer) => firstPlayer.Order - secondPlayer.Order);
             Begin();
         }
 
         private void OnDestroy()
         {
-            IPlayer.OnStateChanged -= HandlePlayerStateChanged;
             IPokerPlayer.OnPlayerRaiseBet -= HandlePlayerRaisedBet;
             IPokerPlayer.OnPlayerCall -= HandlePlayerCalledBet;
-            IPokerPlayer.OnPlayerFold -= HandlePlayerFolded;
-            IPokerPlayer.OnPlayerFinishTurn -= HandlePlayerFinishTurn;
+            End();
         }
 
         #endregion
 
         public void Begin()
         {
+            IPlayer.players.Sort((firstPlayer, secondPlayer) => firstPlayer.Order - secondPlayer.Order);
             finishedStates = PokerGameState.None;
             ExecuteNextGameState();
         }
@@ -140,8 +133,6 @@ namespace CasinoGames.Core
 
         public IEnumerator DealCards(IList<ICardHolder> cardHolders)
         {
-            ShuffleDeck();
-
             for (int i = 0; i < cardHolders.Count; i++)
             {
                 ICardHolder cardHolder = cardHolders[i];
@@ -167,25 +158,7 @@ namespace CasinoGames.Core
 
         public void ClearBoard(IList<ICardHolder> cardHolders)
         {
-            throw new System.NotImplementedException();
-        }
-
-        private void HandleSceneChanged(Scene _)
-        {
-            End();
-            SceneManager.sceneUnloaded -= HandleSceneChanged;
-        }
-
-        private void HandlePlayerStateChanged(IPlayer player)
-        {
-            /*if (!dealtCards && AllPlayersWaiting())
-            {
-                StartCoroutine(DealCards());
-            }
-            else if (player.CurrentState == PlayerState.Waiting || player.CurrentState == PlayerState.Spectating)
-            {
-                IPlayer.PlayerTurn++;
-            }*/
+            throw new NotImplementedException();
         }
 
         private void HandlePlayerRaisedBet(IPokerPlayer player, int raiseAmount)
@@ -238,19 +211,14 @@ namespace CasinoGames.Core
             player.Lose("Fold");
         }
 
-        private void HandlePlayerFinishTurn(IPokerPlayer player)
-        {
-            /*ExecuteNextGameState();*/
-        }
-
         private IEnumerator DealCards()
         {
+            ShuffleDeck();
             yield return new WaitForSeconds(1);
             yield return DealCards(new List<ICardHolder>(IPlayer.players));
             yield return new WaitForSeconds(1);
             yield return DealCards(new List<ICardHolder>(IPlayer.players));
             yield return new WaitForSeconds(1);
-
             IPlayer.PlayerTurn = (IPokerPlayer.DealerButtonLocation + 1) % Mathf.Max(IPlayer.players.Count, 1);
             ExecuteNextGameState();
         }
@@ -271,7 +239,7 @@ namespace CasinoGames.Core
             finishedStates |= currentState;
             currentState = GetNextGameState();
 
-            switch(currentState)
+            switch (currentState)
             {
                 case PokerGameState.PreFlop:
                     ExecutePreFlop();
@@ -283,7 +251,6 @@ namespace CasinoGames.Core
                 case PokerGameState.Turn:
                     StartCoroutine(ExecuteTurn());
                     break;
-
                 case PokerGameState.River:
                     StartCoroutine(ExecuteRiver());
                     break;
@@ -412,9 +379,9 @@ namespace CasinoGames.Core
             }
 
             // Split the pot between players in a draw, or pay the individual winner.
-            if (remainingPlayers.Count > 1) 
+            if (remainingPlayers.Count > 1)
             {
-                int potSplit = (int)(CurrentPot / remainingPlayers.Count);
+                int potSplit = CurrentPot / remainingPlayers.Count;
 
                 remainingPlayers.ForEach(player =>
                 {
@@ -568,6 +535,7 @@ namespace CasinoGames.Core
             List<ICard> aces = new List<ICard>();
             int i = 0;
 
+            // Get all aces.
             while (i < cards.Count)
             {
                 // Assuming any card with a value of 11 is an ace.
@@ -587,6 +555,7 @@ namespace CasinoGames.Core
 
             for (int j = 0; j < cards.Count; j++)
             {
+                // Let ace take the place of a 1 card or follow a 13 (i.e. king) to the right when determining 
                 if (cards[j].Value == 2 || cards[j].Value == 13)
                 {
                     ICard validAce = aces.Find(ace => !sameSuit || ace.Suit == cards[j].Suit);

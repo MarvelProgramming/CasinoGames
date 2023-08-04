@@ -1,9 +1,7 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
 
-namespace CasinoGames.Core
+namespace CasinoGames.Abstractions
 {
     public interface ICardDealer
     {

@@ -1,15 +1,11 @@
-﻿using CasinoGames.Abstractions.Poker;
+﻿using CasinoGames.Abstractions;
+using CasinoGames.Abstractions.Poker;
 using CasinoGames.Utils;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace CasinoGames.Core
+namespace CasinoGames.Core.Poker
 {
     public class PokerPlayerActionUI : PlayerActionUI
     {
