@@ -7,6 +7,19 @@
       "dependencies": {},
       "url": "https://registry.spoiledcat.com"
     },
+    "com.sr4dev.unity-spriteassist": {
+      "version": "https://github.com/sr4dev/Unity-SpriteAssist.git?path=Assets/SpriteAssist",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {},
+      "hash": "06bbed03bdd0754b986d2dd563ca4198dba28e1c"
+    },
+    "com.unity.2d.sprite": {
+      "version": "1.0.0",
+      "depth": 0,
+      "source": "builtin",
+      "dependencies": {}
+    },
     "com.unity.collab-proxy": {
       "version": "2.0.3",
       "depth": 0,

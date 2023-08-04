@@ -1,6 +1,8 @@
 {
   "dependencies": {
     "com.spoiledcat.git": "1.0.12",
+    "com.sr4dev.unity-spriteassist": "https://github.com/sr4dev/Unity-SpriteAssist.git?path=Assets/SpriteAssist",
+    "com.unity.2d.sprite": "1.0.0",
     "com.unity.collab-proxy": "2.0.3",
     "com.unity.feature.development": "1.0.2",
     "com.unity.textmeshpro": "3.0.6",
