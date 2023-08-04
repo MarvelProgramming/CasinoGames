@@ -10,6 +10,5 @@ namespace CasinoGames.Abstractions
         void Begin();
         void Restart();
         void End();
-        void Initialize();
     }
 }

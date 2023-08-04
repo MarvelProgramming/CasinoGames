@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 namespace CasinoGames.Core.Blackjack
 {
@@ -35,14 +34,11 @@ namespace CasinoGames.Core.Blackjack
             IBlackjackPlayer.OnStay += HandlePlayerStay;
             IBlackjackPlayer.OnDouble += HandlePlayerDouble;
             IPlayer.OnStateChanged += HandlePlayerStateChanged;
-            SceneManager.sceneUnloaded += HandleSceneChanged;
             Initialize();
         }
 
         private void Start()
         {
-            IPlayer.players.Sort((firstPlayer, secondPlayer) => firstPlayer.Order - secondPlayer.Order);
-            CurrentState = PlayerState.Waiting;
             Begin();
         }
 
@@ -53,6 +49,7 @@ namespace CasinoGames.Core.Blackjack
             IBlackjackPlayer.OnStay -= HandlePlayerStay;
             IBlackjackPlayer.OnDouble -= HandlePlayerDouble;
             IPlayer.OnStateChanged -= HandlePlayerStateChanged;
+            End();
         }
 
         #endregion
@@ -91,6 +88,7 @@ namespace CasinoGames.Core.Blackjack
             {
                 ICardHolder cardHolder = cardHolders[i];
                 DealCard(cardHolder);
+
                 yield return new WaitForSeconds(cardPlacementDelay);
             }
         }
@@ -103,8 +101,8 @@ namespace CasinoGames.Core.Blackjack
 
             for (int i = 0; i < timesToShuffle; i++)
             {
-                int firstCardIndex = UnityEngine.Random.Range(0, Deck.Count);
-                int secondCardIndex = UnityEngine.Random.Range(0, Deck.Count);
+                int firstCardIndex = Random.Range(0, Deck.Count);
+                int secondCardIndex = Random.Range(0, Deck.Count);
 
                 // Avoid attempting to swap the same card with itself.
                 secondCardIndex = secondCardIndex == firstCardIndex ? (secondCardIndex + 1) % Deck.Count : secondCardIndex;
@@ -118,11 +116,13 @@ namespace CasinoGames.Core.Blackjack
 
         private ICard GetRandomDeckCard()
         {
-            return Deck[UnityEngine.Random.Range(0, Deck.Count)];
+            return Deck[Random.Range(0, Deck.Count)];
         }
 
         public void Begin()
         {
+            IPlayer.players.Sort((firstPlayer, secondPlayer) => firstPlayer.Order - secondPlayer.Order);
+            CurrentState = PlayerState.Waiting;
             IGameManager.OnBegin?.Invoke();
         }
 
@@ -224,12 +224,6 @@ namespace CasinoGames.Core.Blackjack
             }
         }
 
-        private void HandleSceneChanged(Scene _)
-        {
-            End();
-            SceneManager.sceneUnloaded -= HandleSceneChanged;
-        }
-
         private IEnumerator DealTwoCardsToEachPlayer()
         {
             yield return new WaitForSeconds(1);
@@ -276,12 +270,13 @@ namespace CasinoGames.Core.Blackjack
             }
 
             yield return new WaitForSeconds(2);
+
             Restart();
         }
 
         private void PlayDealCardSound()
         {
-            audioSource.pitch = UnityEngine.Random.Range(0.95f, 1.05f);
+            audioSource.pitch = Random.Range(0.95f, 1.05f);
             audioSource.PlayOneShot(dealCardSound);
         }
 

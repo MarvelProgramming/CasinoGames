@@ -2,8 +2,10 @@ using CasinoGames.Abstractions;
 using CasinoGames.Core.Blackjack;
 using CasinoGames.Utils;
 using NUnit.Framework;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace CasinoGames.Core.Tests
 {
@@ -59,8 +61,8 @@ namespace CasinoGames.Core.Tests
             Assert.GreaterOrEqual(ratioOfCardsThatChangedPosition, 0.5f, $"Only {(int)(ratioOfCardsThatChangedPosition * 100)}% of cards changed positions, expected >= 50%");
         }
 
-        [Test]
-        public void DealCards_Gives_One_Card_To_Each_Player()
+        [UnityTest]
+        public IEnumerator DealCards_Gives_One_Card_To_Each_Player()
         {
             // Arrange
             List<ICardHolder> cardHolders = new List<ICardHolder>();
@@ -75,7 +77,7 @@ namespace CasinoGames.Core.Tests
 
             // Act
             dealer.Deck = deck;
-            dealer.DealCards(cardHolders);
+            yield return dealer.DealCards(cardHolders);
 
             // Assert
             for (int i = 0; i < cardHolders.Count; i++)
