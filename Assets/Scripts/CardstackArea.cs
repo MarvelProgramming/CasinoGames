@@ -15,14 +15,11 @@ namespace CasinoGames.Core
         [SerializeField, Range(-1, 1)]
         private int placementDirection = 1;
 
-        [SerializeField]
-        private BlackjackPlayer player;
+        [SerializeReference]
+        private Player player;
 
         [SerializeField]
         private GameObject physicalCardPrefab;
-
-        [SerializeField]
-        private GameObject basePlacementLocation;
 
         #region Unity
 
@@ -44,13 +41,13 @@ namespace CasinoGames.Core
 
         public void AddCard(PhysicalCard card)
         {
-            card.transform.SetParent(basePlacementLocation.transform, false);
-            card.transform.localPosition += Vector3.right * placementDirection * 0.1f * Size;
+            card.transform.SetParent(transform, false);
+            card.transform.localPosition += Vector3.right * placementDirection * 50f * Size;
             card.transform.position += Vector3.up * 0.0008f * Size;
 
             if (Size > 0)
             {
-                basePlacementLocation.transform.localPosition -= Vector3.right * placementDirection * 0.1f * 0.5f;
+                transform.localPosition -= Vector3.right * placementDirection * 50f * 0.5f;
             }
 
             Size++;
@@ -58,19 +55,19 @@ namespace CasinoGames.Core
 
         public void UpdateCard(int cardIndex, FacingDirection newDirection)
         {
-            PhysicalCard cardToUpdate = basePlacementLocation.transform.GetChild(cardIndex).GetComponent<PhysicalCard>();
+            PhysicalCard cardToUpdate = transform.GetChild(cardIndex).GetComponent<PhysicalCard>();
             cardToUpdate.SetFacingDirection(newDirection);
         }
 
         public void RemoveAllCards()
         {
-            foreach (Transform physicalCardTransform in basePlacementLocation.transform)
+            foreach (Transform physicalCardTransform in transform)
             {
                 Destroy(physicalCardTransform.gameObject);
             }
 
             Size = 0;
-            basePlacementLocation.transform.localPosition = new Vector3(0, basePlacementLocation.transform.localPosition.y, basePlacementLocation.transform.localPosition.z);
+            transform.localPosition = new Vector3(0, transform.localPosition.y, transform.localPosition.z);
         }
 
         private void HandleHolderGivenCard(ICardHolder holder)

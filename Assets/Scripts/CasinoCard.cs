@@ -22,12 +22,16 @@ namespace CasinoGames.Core
         [field: SerializeField]
         public Sprite BackImage { get; private set; }
 
-        public CasinoCard(int value, FacingDirection facing, Sprite frontImage, Sprite backImage)
+        [field: SerializeField]
+        public CardSuit Suit { get; private set; }
+
+        public CasinoCard(int value, FacingDirection facing, Sprite frontImage, Sprite backImage, CardSuit suit = CardSuit.Hearts)
         {
             Value = value;
             Facing = facing;
             FrontImage = frontImage;
             BackImage = backImage;
+            Suit = suit;
         }
     }
 }

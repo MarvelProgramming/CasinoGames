@@ -8,87 +8,21 @@ using UnityEngine;
 
 namespace CasinoGames.Core.Blackjack
 {
-    public class BlackjackPlayer : MonoBehaviour, IBlackjackPlayer
+    public class BlackjackPlayer : Player, IBlackjackPlayer
     {
-        [field: SerializeField]
-        public string Nickname { get; private set; }
-
-        [field: SerializeField]
-        public int Order { get; private set; }
-
-        private int _currentBet;
-        public int CurrentBet
-        {
-            get => _currentBet;
-            set
-            {
-                if (_currentBet != value)
-                {
-                    _currentBet = value;
-                    IBetter.OnBetChanged?.Invoke(this);
-                }
-            }
-        }
-
-        private int _cash = 1000;
-        public int Cash
-        {
-            get => _cash;
-            set
-            {
-                if (_cash != value)
-                {
-                    _cash = value;
-                    ICashHolder.OnCashChanged?.Invoke(this);
-                }
-            }
-        }
-
-        public IList<ICard> Cards { get; private set; } = new List<ICard>();
-
-        [field: SerializeField]
-        public bool IsUser { get; private set; }
-
-        private PlayerState _currentState = PlayerState.Betting;
-        public PlayerState CurrentState
-        {
-            get => _currentState;
-            set
-            {
-                if (_currentState != value)
-                {
-                    _currentState = value;
-                    IPlayer.OnStateChanged(this);
-                }
-            }
-        }
-
-        protected const float cardPlacementDelay = 0.25f;
-
         #region Unity
 
-        protected virtual void Awake()
+        protected override void Awake()
         {
-            if (IsUser)
-            {
-                if (IPlayer.UserPlayer != null)
-                {
-                    throw new Exception("More than one \"User\" player exists in the scene! There should only ever be one");
-                }
-                else
-                {
-                    IPlayer.UserPlayer = this;
-                }
-            }
-
-            IPlayer.players.Add(this);
+            base.Awake();
+            _currentState = PlayerState.Betting;
             IPlayer.OnActivePlayerChanged += HandleActivePlayerChanged;
             IGameManager.OnBegin += HandleGameBegin;
             IGameManager.OnRestart += HandleGameRestart;
             IGameManager.OnEnd += HandleGameEnd;
         }
 
-        private void OnDestroy()
+        protected virtual void OnDestroy()
         {
             IPlayer.OnActivePlayerChanged -= HandleActivePlayerChanged;
             IGameManager.OnBegin -= HandleGameBegin;
@@ -98,7 +32,7 @@ namespace CasinoGames.Core.Blackjack
 
         #endregion
 
-        public int GetHandValue()
+        public override int GetHandValue()
         {
             int handValue = 0;
             List<ICard> cards = new List<ICard>(Cards);
@@ -118,22 +52,6 @@ namespace CasinoGames.Core.Blackjack
             }
 
             return handValue;
-        }
-
-        public void GiveCard(ICard card)
-        {
-            Cards.Add(card);
-            ICardHolder.OnGivenCard?.Invoke(this);
-        }
-
-        public void DecreaseBet(int amount)
-        {
-            if (amount < 0)
-            {
-                throw new ArgumentException($"{nameof(DecreaseBet)} expects a positive input, received {amount}!");
-            }
-
-            CurrentBet = Mathf.Max(CurrentBet - amount, 0);
         }
 
         public virtual void Hit()
@@ -156,30 +74,22 @@ namespace CasinoGames.Core.Blackjack
             }
         }
 
-        public void IncreaseBet(int amount)
+        public override void Win(string reason = "")
         {
-            if (amount < 0)
-            {
-                throw new ArgumentException($"{nameof(IncreaseBet)} expects a positive input, received {amount}!");
-            }
-
-            CurrentBet = Mathf.Min(CurrentBet + amount, Cash);
+            Cash += CurrentBet;
+            base.Win(reason);
         }
 
-        public void ClearBet()
+        public override void Lose(string reason = "")
         {
-            CurrentBet = 0;
+            Cash -= CurrentBet;
+            base.Lose(reason);
         }
 
-        public void RemoveAllCards()
+        public override void Draw(string reason = "")
         {
-            Cards.Clear();
-            ICardHolder.OnAllCardsRemoved?.Invoke(this);
-        }
-
-        public void BetAllIn()
-        {
-            CurrentBet = Cash;
+            CurrentState = PlayerState.Spectating;
+            base.Draw(reason);
         }
 
         /// <summary>
@@ -188,26 +98,6 @@ namespace CasinoGames.Core.Blackjack
         public void SetState(int newState)
         {
             CurrentState = (PlayerState)newState;
-        }
-
-        public void Win(string reason = "")
-        {
-            Cash += CurrentBet;
-            IPlayer.OnPlayerWin?.Invoke(this, reason);
-            CurrentState = PlayerState.Spectating;
-        }
-
-        public void Lose(string reason = "")
-        {
-            Cash -= CurrentBet;
-            IPlayer.OnPlayerLose?.Invoke(this, reason);
-            CurrentState = PlayerState.Spectating;
-        }
-
-        public void Draw(string reason = "")
-        {
-            IPlayer.OnPlayerDraw?.Invoke(this, reason);
-            CurrentState = PlayerState.Spectating;
         }
 
         protected virtual void HandleActivePlayerChanged(IPlayer newActivePlayer)
@@ -229,13 +119,13 @@ namespace CasinoGames.Core.Blackjack
         {
             yield return new WaitForSeconds(1);
 
-            do
+            while (GetHandValue() < 17)
             {
                 Hit();
-                yield return new WaitForSeconds(cardPlacementDelayOverride);
-            } while (GetHandValue() < 17);
+                yield return new WaitForSeconds(UnityEngine.Random.Range(0.5f, 1f));
+            };
 
-            if (stayOnceFinished)
+            if (stayOnceFinished && CurrentState != PlayerState.Spectating)
             {
                 Stay();
             }
@@ -259,13 +149,7 @@ namespace CasinoGames.Core.Blackjack
 
         private void HandleGameEnd()
         {
-            
-        }
-
-        public void UpdateCard(int cardIndex, FacingDirection newFacingDirection)
-        {
-            Cards[cardIndex].Facing = newFacingDirection;
-            ICardHolder.OnCardChanged?.Invoke(this, cardIndex);
+            throw new NotImplementedException();
         }
     }
 }

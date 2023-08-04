@@ -114,6 +114,6 @@ TextureImporter:
     nameFileIdTable: {}
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
-  userData: 
+  userData: '{"mode":4,"transparentDetail":0.30000001192092898,"transparentAlphaTolerance":10,"opaqueDetail":0.30000001192092898,"opaqueAlphaTolerance":10,"opaqueExtrude":0.06400000303983689,"gridSize":0,"gridTolerance":0.0,"detectHoles":true,"edgeSmoothing":1.0,"useNonZero":false,"transparentShaderName":"Unlit/Transparent","opaqueShaderName":"Unlit/Texture","thickness":0.0,"overrideTag":false,"overrideLayer":false,"overrideSortingLayer":false,"tag":"Untagged","layer":0,"sortingLayerId":0,"sortingOrder":0,"isCorrectNormal":false}'
   assetBundleName: 
   assetBundleVariant: 

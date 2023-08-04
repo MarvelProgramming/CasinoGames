@@ -14,5 +14,6 @@ namespace CasinoGames.Core
         FacingDirection Facing { get; set; }
         Sprite FrontImage { get; }
         Sprite BackImage { get; }
+        CardSuit Suit { get; }
     }
 }

@@ -10,6 +10,7 @@ using UnityEngine.SceneManagement;
 
 namespace CasinoGames.Core.Blackjack
 {
+    [RequireComponent(typeof(AudioSource))]
     public class BlackjackDealer : BlackjackPlayer, IBlackjackDealer, IGameManager
     {
         public IList<ICard> Deck { get; set; }
@@ -19,6 +20,11 @@ namespace CasinoGames.Core.Blackjack
 
         [SerializeField]
         private int numberOfDecksToUse;
+
+        [SerializeField]
+        private AudioClip dealCardSound;
+
+        private AudioSource audioSource;
 
         private bool dealtCards;
 
@@ -31,7 +37,7 @@ namespace CasinoGames.Core.Blackjack
             IBlackjackPlayer.OnStay += HandlePlayerStay;
             IBlackjackPlayer.OnDouble += HandlePlayerDouble;
             IPlayer.OnStateChanged += HandlePlayerStateChanged;
-            SceneManager.activeSceneChanged += HandleSceneChanged;
+            SceneManager.sceneUnloaded += HandleSceneChanged;
             Initialize();
         }
 
@@ -42,8 +48,9 @@ namespace CasinoGames.Core.Blackjack
             Begin();
         }
 
-        private void OnDestroy()
+        protected override void OnDestroy()
         {
+            base.OnDestroy();
             IBlackjackPlayer.OnHit -= HandlePlayerHit;
             IBlackjackPlayer.OnStay -= HandlePlayerStay;
             IBlackjackPlayer.OnDouble -= HandlePlayerDouble;
@@ -75,10 +82,13 @@ namespace CasinoGames.Core.Blackjack
             }
 
             Deck.Remove(dealtCard);
+            PlayDealCardSound();
         }
 
         public IEnumerator DealCards(IList<ICardHolder> cardHolders)
         {
+            ShuffleDeck();
+
             for (int i = 0; i < cardHolders.Count; i++)
             {
                 ICardHolder cardHolder = cardHolders[i];
@@ -137,6 +147,7 @@ namespace CasinoGames.Core.Blackjack
 
         public void Initialize()
         {
+            audioSource = GetComponent<AudioSource>();
             List<ICard> newDeck = new List<ICard>();
 
             for (int i = 0; i < numberOfDecksToUse; i++)
@@ -159,6 +170,11 @@ namespace CasinoGames.Core.Blackjack
             if (player.GetHandValue() > 21)
             {
                 player.Lose("Bust!");
+
+                if (player != (IBlackjackPlayer)this)
+                {
+                    IPlayer.PlayerTurn++;
+                }
             }
         }
 
@@ -167,6 +183,11 @@ namespace CasinoGames.Core.Blackjack
             if (player != IPlayer.ActivePlayer)
             {
                 return;
+            }
+
+            if (player.GetHandValue() == 21)
+            {
+                player.Win("Blackjack!");
             }
 
             IPlayer.PlayerTurn++;
@@ -205,15 +226,10 @@ namespace CasinoGames.Core.Blackjack
             }
         }
 
-        private void HandleSceneChanged(Scene _, Scene next)
+        private void HandleSceneChanged(Scene _)
         {
-            if (next == SceneManager.GetActiveScene())
-            {
-                return;
-            }
-
             End();
-            SceneManager.activeSceneChanged -= HandleSceneChanged;
+            SceneManager.sceneUnloaded -= HandleSceneChanged;
         }
 
         private IEnumerator DealTwoCardsToEachPlayer()
@@ -231,6 +247,7 @@ namespace CasinoGames.Core.Blackjack
         {
             yield return new WaitForSeconds(1);
             UpdateCard(1, FacingDirection.Front);
+            PlayDealCardSound();
             yield return base.DelayedHitUntil17(stayOnceFinished, 1);
 
             int dealerHandValue = GetHandValue();
@@ -246,18 +263,28 @@ namespace CasinoGames.Core.Blackjack
 
                 if (dealerHandValue > 21 || dealerHandValue < player.GetHandValue())
                 {
-                    player.Win("Dealer Bust!\nYou win!");
+                    player.Win("Win!");
                 }
                 else if (dealerHandValue > playerHandValue)
                 {
-                    player.Lose($"Dealer reached {dealerHandValue}.\nYou lose!");
+                    player.Lose($"Lose!");
                 }
                 else if (dealerHandValue == playerHandValue)
                 {
                     player.Draw("Draw!");
                 }
+
+                yield return new WaitForSeconds(cardPlacementDelayOverride);
             }
 
+            yield return new WaitForSeconds(2);
+            Restart();
+        }
+
+        private void PlayDealCardSound()
+        {
+            audioSource.pitch = UnityEngine.Random.Range(0.95f, 1.05f);
+            audioSource.PlayOneShot(dealCardSound);
         }
 
         private bool AllPlayersWaiting()

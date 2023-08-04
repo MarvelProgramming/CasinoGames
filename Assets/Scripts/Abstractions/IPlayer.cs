@@ -26,12 +26,12 @@ namespace CasinoGames.Core
             get => _playerTurn;
             set
             {
-                _playerTurn = Mathf.Max(value, 0) % players.Count;
+                _playerTurn = value % Mathf.Max(players.Count, 1);
                 OnActivePlayerChanged?.Invoke(ActivePlayer);
             }
         }
 
-        public static IPlayer ActivePlayer => players[PlayerTurn];
+        public static IPlayer ActivePlayer => PlayerTurn >= 0 && PlayerTurn < players.Count ? players[PlayerTurn] : null;
 
         public static IPlayer UserPlayer;
 

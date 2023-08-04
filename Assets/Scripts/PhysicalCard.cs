@@ -12,20 +12,25 @@ namespace CasinoGames.Core
     public class PhysicalCard : MonoBehaviour
     {
         [SerializeField]
-        private SpriteRenderer frontImage;
-        [SerializeField]
-        private SpriteRenderer backImage;
+        private Image image;
+        private Material matCopy;
+
+        private void Awake()
+        {
+            matCopy = Instantiate(image.material);
+            image.material = matCopy;
+        }
 
         public void Setup(Sprite frontSprite, Sprite backSprite, FacingDirection facingDirection)
         {
-            frontImage.sprite = frontSprite;
-            backImage.sprite = backSprite;
+            image.material.SetTexture("_FrontTex", frontSprite.texture);
+            image.material.SetTexture("_BackTex", backSprite.texture);
             SetFacingDirection(facingDirection);
         }
 
         public void SetFacingDirection(FacingDirection facingDirection)
         {
-            transform.forward = facingDirection == FacingDirection.Front ? Vector3.up : Vector3.down;
+            image.transform.rotation = Quaternion.AngleAxis(facingDirection == FacingDirection.Front ? 0 : 180, Vector3.up);
         }
     }
 }
