@@ -1,9 +1,7 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using CasinoGames.Abstractions;
 using NUnit.Framework;
-using UnityEngine;
-using UnityEngine.TestTools;
+using System;
+using System.Collections.Generic;
 
 namespace CasinoGames.Core.Tests
 {

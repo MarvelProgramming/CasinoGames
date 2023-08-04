@@ -1,13 +1,8 @@
-using CasinoGames.Core;
-using CasinoGames.Core.Blackjack;
-using System;
-using System.Collections;
-using System.Collections.Generic;
+using CasinoGames.Abstractions;
 using TMPro;
 using UnityEngine;
-using UnityEngine.SocialPlatforms;
 
-namespace CasinoGames
+namespace CasinoGames.Core
 {
     public class PlayerUI : MonoBehaviour
     {

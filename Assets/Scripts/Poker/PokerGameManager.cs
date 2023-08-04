@@ -1,7 +1,6 @@
+using CasinoGames.Abstractions;
 using CasinoGames.Abstractions.Poker;
 using CasinoGames.Utils;
-using Codice.CM.Client.Differences;
-using Codice.CM.Common;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -9,7 +8,7 @@ using System.Linq;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace CasinoGames.Core
+namespace CasinoGames.Core.Poker
 {
     [RequireComponent(typeof(AudioSource))]
     public class PokerGameManager : MonoBehaviour, ICardDealer, IGameManager
@@ -58,7 +57,6 @@ namespace CasinoGames.Core
             IPokerPlayer.OnPlayerRaiseBet += HandlePlayerRaisedBet;
             IPokerPlayer.OnPlayerCall += HandlePlayerCalledBet;
             IPokerPlayer.OnPlayerFold += HandlePlayerFolded;
-            IPokerPlayer.OnPlayerFinishTurn += HandlePlayerFinishTurn;
             SceneManager.sceneUnloaded += HandleSceneChanged;
             Initialize();
         }
@@ -75,7 +73,6 @@ namespace CasinoGames.Core
             IPokerPlayer.OnPlayerRaiseBet -= HandlePlayerRaisedBet;
             IPokerPlayer.OnPlayerCall -= HandlePlayerCalledBet;
             IPokerPlayer.OnPlayerFold -= HandlePlayerFolded;
-            IPokerPlayer.OnPlayerFinishTurn -= HandlePlayerFinishTurn;
         }
 
         #endregion
@@ -167,7 +164,7 @@ namespace CasinoGames.Core
 
         public void ClearBoard(IList<ICardHolder> cardHolders)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         private void HandleSceneChanged(Scene _)
@@ -271,7 +268,7 @@ namespace CasinoGames.Core
             finishedStates |= currentState;
             currentState = GetNextGameState();
 
-            switch(currentState)
+            switch (currentState)
             {
                 case PokerGameState.PreFlop:
                     ExecutePreFlop();
@@ -412,9 +409,9 @@ namespace CasinoGames.Core
             }
 
             // Split the pot between players in a draw, or pay the individual winner.
-            if (remainingPlayers.Count > 1) 
+            if (remainingPlayers.Count > 1)
             {
-                int potSplit = (int)(CurrentPot / remainingPlayers.Count);
+                int potSplit = CurrentPot / remainingPlayers.Count;
 
                 remainingPlayers.ForEach(player =>
                 {
