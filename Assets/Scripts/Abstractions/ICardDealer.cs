@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,10 +7,10 @@ namespace CasinoGames.Core
 {
     public interface ICardDealer
     {
-        IList<ICard> Deck { get; }
+        IList<ICard> Deck { get; set; }
         void ShuffleDeck();
-        void DealCards();
+        IEnumerator DealCards(IList<ICardHolder> cardHolders);
         void DealCard(ICardHolder cardHolder);
-        void ClearBoard();
+        void ClearBoard(IList<ICardHolder> cardHolders);
     }
 }

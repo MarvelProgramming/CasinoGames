@@ -5,7 +5,10 @@
         "UnityEngine.TestRunner",
         "UnityEditor.TestRunner",
         "CasinoGames.Core",
-        "CasinoGames.Interfaces"
+        "CasinoGames.Utils",
+        "CasinoGames.Blackjack",
+        "CasinoGames.Abstractions",
+        "CasinoGames.Abstractions.Blackjack"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

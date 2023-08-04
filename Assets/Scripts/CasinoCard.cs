@@ -7,25 +7,31 @@ using UnityEngine;
 
 namespace CasinoGames.Core
 {
+    [Serializable]
     public class CasinoCard : ICard
     {
-        public string Name { get; private set; }
-
+        [field: SerializeField]
         public int Value { get; private set; }
 
+        [field: SerializeField]
         public FacingDirection Facing { get; set; }
 
+        [field: SerializeField]
         public Sprite FrontImage { get; private set; }
 
+        [field: SerializeField]
         public Sprite BackImage { get; private set; }
 
-        public CasinoCard(string name, int value, FacingDirection facing, Sprite frontImage, Sprite backImage)
+        [field: SerializeField]
+        public CardSuit Suit { get; private set; }
+
+        public CasinoCard(int value, FacingDirection facing, Sprite frontImage, Sprite backImage, CardSuit suit = CardSuit.Hearts)
         {
-            Name = name;
             Value = value;
             Facing = facing;
             FrontImage = frontImage;
             BackImage = backImage;
+            Suit = suit;
         }
     }
 }

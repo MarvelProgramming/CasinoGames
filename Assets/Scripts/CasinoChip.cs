@@ -4,18 +4,18 @@ using UnityEngine;
 
 namespace CasinoGames.Core
 {
-    public class CasinoChip
+    public class CasinoChip : IGameChip
     {
-        public CasinoChipType type;
+        public CasinoChipType ChipType { get; private set; }
 
         public CasinoChip(CasinoChipType type)
         {
-            this.type = type;
+            ChipType = type;
         }
 
         public int GetValue()
         {
-            return (int)type;
+            return (int)ChipType;
         }
     }
 }
